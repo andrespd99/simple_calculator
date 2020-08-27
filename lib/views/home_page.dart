@@ -33,6 +33,7 @@ class HomePage extends StatelessWidget {
                   Container(
                     width: size.width * 0.75,
                     child: Table(
+                      border: TableBorder.all(color: kPrimaryColor, width: 2.0),
                       children: [
                         TableRow(
                           children: [
@@ -62,9 +63,47 @@ class HomePage extends StatelessWidget {
                             CalculatorButton('3'),
                           ],
                         ),
+                        TableRow(
+                          children: [
+                            CalculatorButton(''),
+                            CalculatorButton('0'),
+                            CalculatorButton('00'),
+                          ],
+                        ),
                       ],
                     ),
                   ),
+                  Container(
+                    width: size.width * 0.25,
+                    child: Table(
+                      border: TableBorder(
+                        horizontalInside:
+                            BorderSide(color: kPrimaryColor, width: 2.0),
+                        top: BorderSide(color: kPrimaryColor, width: 2.0),
+                        bottom: BorderSide(color: kPrimaryColor, width: 2.0),
+                      ),
+                      children: [
+                        TableRow(
+                          children: [CalculatorButton('×', color: Colors.blue)],
+                        ),
+                        TableRow(
+                          children: [CalculatorButton('+', color: Colors.blue)],
+                        ),
+                        TableRow(
+                          children: [CalculatorButton('-', color: Colors.blue)],
+                        ),
+                        TableRow(
+                          children: [
+                            CalculatorButton(
+                              '=',
+                              buttonHeight: 2,
+                              color: Colors.red,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               )
             ],
