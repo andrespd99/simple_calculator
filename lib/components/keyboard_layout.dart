@@ -22,9 +22,9 @@ class KeyboardLayout extends StatelessWidget {
             children: [
               TableRow(
                 children: [
-                  CalculatorButton('C', color: Colors.red),
-                  CalculatorButton('DEL', color: Colors.blue),
-                  CalculatorButton('/', color: Colors.blue),
+                  CalculatorButton('C', color: Colors.grey),
+                  CalculatorButton('DEL', color: Colors.orange),
+                  CalculatorButton('/', color: Colors.orange),
                 ],
               ),
               TableRow(
@@ -68,20 +68,20 @@ class KeyboardLayout extends StatelessWidget {
             ),
             children: [
               TableRow(
-                children: [CalculatorButton('×', color: Colors.blue)],
+                children: [CalculatorButton('×', color: Colors.orange)],
               ),
               TableRow(
-                children: [CalculatorButton('+', color: Colors.blue)],
+                children: [CalculatorButton('+', color: Colors.orange)],
               ),
               TableRow(
-                children: [CalculatorButton('-', color: Colors.blue)],
+                children: [CalculatorButton('-', color: Colors.orange)],
               ),
               TableRow(
                 children: [
                   CalculatorButton(
                     '=',
                     buttonHeight: 2,
-                    color: Colors.red,
+                    color: Colors.grey,
                   ),
                 ],
               ),
@@ -101,7 +101,7 @@ class CalculatorButton extends StatelessWidget {
     this.char, {
     Key key,
     this.buttonHeight = 1,
-    this.color = Colors.grey,
+    this.color = Colors.blueGrey,
   }) : super(key: key);
 
   final String char;

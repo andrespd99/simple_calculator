@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
             bodyColor: kTextColor,
           ),
         ),
-        home: HomePage(kAppTitle),
+        home: HomePage(title: kAppTitle),
       ),
     );
   }

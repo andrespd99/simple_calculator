@@ -6,11 +6,8 @@ import 'package:simple_calculator/constants.dart';
 import 'package:simple_calculator/services/provider.dart';
 
 class HomePage extends StatelessWidget {
-  String title;
-
-  HomePage(String title) {
-    this.title = title;
-  }
+  HomePage({this.title = 'title'});
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +23,12 @@ class HomePage extends StatelessWidget {
             children: [
               Expanded(child: Divider(color: Colors.black)),
               //Widget that shows the value typed on keyboard
-              InputValueBox(),
+              InputValueBox(size: size),
               SizedBox(
                 height: size.height * 0.05,
               ),
               //Widget that shows the result.
-              OutputValueBox(),
+              OutputValueBox(size: size),
               SizedBox(height: size.height * 0.03),
               KeyboardLayout(size: size)
             ],
@@ -43,6 +40,12 @@ class HomePage extends StatelessWidget {
 }
 
 class InputValueBox extends StatelessWidget {
+  InputValueBox({
+    this.size,
+  });
+
+  Size size;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -51,14 +54,19 @@ class InputValueBox extends StatelessWidget {
         return Container(
           padding: EdgeInsets.only(right: kDefaultPadding),
           width: double.infinity,
+          height: size.height * 0.10,
           color: kPrimaryColor,
-          child: Text(
-            snapshot.hasData
-                ? (snapshot.data.isNotEmpty ? snapshot.data : "0")
-                : "0",
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              fontSize: 70.0,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Text(
+              snapshot.hasData
+                  ? (snapshot.data.isNotEmpty ? snapshot.data : "")
+                  : "",
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                fontSize: 70.0,
+              ),
             ),
           ),
         );
@@ -68,9 +76,12 @@ class InputValueBox extends StatelessWidget {
 }
 
 class OutputValueBox extends StatelessWidget {
-  const OutputValueBox({
+  OutputValueBox({
     Key key,
+    this.size,
   }) : super(key: key);
+
+  final Size size;
 
   @override
   Widget build(BuildContext context) {
@@ -80,14 +91,19 @@ class OutputValueBox extends StatelessWidget {
         return Container(
           padding: EdgeInsets.only(right: kDefaultPadding),
           width: double.infinity,
+          height: size.height * 0.125,
           color: kPrimaryColor,
-          child: Text(
-            snapshot.hasData
-                ? (snapshot.data.isNotEmpty ? snapshot.data : "0")
-                : "0",
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              fontSize: 100.0,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Text(
+              snapshot.hasData
+                  ? (snapshot.data.isNotEmpty ? snapshot.data : "0")
+                  : "0",
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                fontSize: 100.0,
+              ),
             ),
           ),
         );

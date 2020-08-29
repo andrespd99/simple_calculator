@@ -46,13 +46,16 @@ class KeyboardBloc {
 
   //Saves the operator selected and the value of the first operand.
   void _preOperate(String value) async {
-    //_nextOperation saves the operator to be used.
+    //If both operands were defined, calculate its result.
+    if (this._inputOperand.isNotEmpty && this._auxOperand.isNotEmpty)
+      _calculate();
+    //_nextOperation saves the operator to be used next.
     this._nextOperation = value;
+    if (value == '+' || value == '-') resultSink(this._inputOperand);
     //_auxOperand saves the first operand with which the operation is to be made.
     this._auxOperand = _inputOperand;
     this._inputOperand = "";
-    await inputSink("");
-    print('ok' + value);
+    // await inputSink("");
   }
 
   void _eraseCalc() async {
@@ -65,38 +68,35 @@ class KeyboardBloc {
 
   //Makes calculation.
   void _calculate() async {
-    double doubleOperand2;
-    double doubleOperand1;
-    double result = 0;
+    num doubleOperand2;
+    num doubleOperand1;
+    num result = 0;
 
     if (_auxOperand.isEmpty) _auxOperand = '0';
     if (_inputOperand.isEmpty) _inputOperand = '0';
 
     if (_nextOperation.isNotEmpty) {
+      doubleOperand1 = num.parse(_auxOperand);
+      doubleOperand2 = num.parse(_inputOperand);
       switch (_nextOperation) {
         case '+':
-          doubleOperand1 = double.parse(_auxOperand);
-          doubleOperand2 = double.parse(_inputOperand);
           result = doubleOperand1 + doubleOperand2;
           break;
         case '-':
-          doubleOperand1 = double.parse(_auxOperand);
-          doubleOperand2 = double.parse(_inputOperand);
           result = doubleOperand1 - doubleOperand2;
           break;
         case '/':
-          doubleOperand1 = double.parse(_auxOperand);
-          doubleOperand2 = double.parse(_inputOperand);
           result = doubleOperand1 / doubleOperand2;
           break;
         case '×':
-          doubleOperand1 = double.parse(_auxOperand);
-          doubleOperand2 = double.parse(_inputOperand);
           result = doubleOperand1 * doubleOperand2;
           break;
       }
+      this.resultSink(result.toString());
+      this._inputOperand = result.toString();
+    } else {
+      this.resultSink(_inputOperand);
+      this._inputOperand = "";
     }
-    await this.resultSink(result.toString());
-    this._inputOperand = result.toString();
   }
 }
