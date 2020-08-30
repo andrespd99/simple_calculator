@@ -8,12 +8,10 @@ class KeyboardBloc {
   //Getters of stream and Sink of the stream controllers.
   Stream<String> get inputStream => _inputStreamController.stream;
   Function(String) get inputSink => _inputStreamController.add;
-
   Stream<String> get resultStream => _resultStreamController.stream;
   Function(String) get resultSink => _resultStreamController.add;
 
   String _inputOperand = ""; //Input operand value.
-
   String _auxOperand = ""; //First operand cached for math operation.
 
   //List of mathematical operators.
@@ -21,14 +19,16 @@ class KeyboardBloc {
 
   String _nextOperation = ""; //Next operation to be executed.
 
-  bool swippable = true;
+  bool swippable = true; //Swipper control.
 
   dispose() {
     _inputStreamController?.close();
     _resultStreamController?.close();
   }
 
-  void pushDigit(String value) async {
+  //Input listener.
+  void pushDigit(String value) {
+    //If Clear is hit, erase calculator data.
     if (value == 'C')
       _eraseCalc();
     else if (value == 'DEL' || value == 'del') {
@@ -38,15 +38,15 @@ class KeyboardBloc {
     } else if (value == '=') {
       _calculate();
     } else {
-      this._inputOperand += value;
-      await inputSink(this._inputOperand);
+      inputDigit(value);
     }
   }
 
   //Saves the operator selected and the value of the first operand.
-  void _preOperate(String value) async {
-    //If both operands were defined, calculate its result.
-    if (this._inputOperand.isNotEmpty && this._auxOperand.isNotEmpty)
+  void _preOperate(String value) {
+    //If both operands were defined and next input is another operator,
+    //calculate result with last operator.
+    if (this._nextOperation.isNotEmpty && this._auxOperand.isNotEmpty)
       _calculate();
     //_nextOperation saves the operator to be used next.
     this._nextOperation = value;
@@ -54,19 +54,20 @@ class KeyboardBloc {
     //_auxOperand saves the first operand with which the operation is to be made.
     this._auxOperand = _inputOperand;
     this._inputOperand = "";
-    // await inputSink("");
+    // inputSink("");
   }
 
-  void _eraseCalc() async {
+  //Delete calculator data
+  void _eraseCalc() {
     this._inputOperand = "";
     this._auxOperand = "";
     this._nextOperation = "";
-    await inputSink("");
-    await resultSink("");
+    inputSink("");
+    resultSink("");
   }
 
   //Makes calculation.
-  void _calculate() async {
+  void _calculate() {
     num doubleOperand2;
     num doubleOperand1;
     num result = 0;
@@ -93,6 +94,7 @@ class KeyboardBloc {
       }
       this.resultSink(result.toString());
       this._inputOperand = result.toString();
+      this._auxOperand = "";
     } else {
       this.resultSink(_inputOperand);
       this._inputOperand = "";
@@ -114,5 +116,29 @@ class KeyboardBloc {
       deleteDigit();
       Timer(Duration(milliseconds: 500), () => (swippable = true));
     }
+  }
+
+  void inputDigit(String digit) {
+    if (digit == ".") {
+      if (this._inputOperand.isEmpty) {
+        this._inputOperand = "0.";
+      } else if (this._inputOperand.contains(".")) {
+        //DO NOTHING IF DIGIT HAS DECIMAL SEPARATOR ALREADY.
+      } else {
+        this._inputOperand += digit;
+      }
+    } else if (digit.contains('0')) {
+      if (this._inputOperand.isEmpty) {
+        this._inputOperand += "0";
+      } else if (this._inputOperand == '0') {
+        //Do nothing if input operand is 0 and other 0 is hit again
+        //to avoid multiple leading zeroes.
+      } else {
+        this._inputOperand += digit;
+      }
+    } else {
+      this._inputOperand += digit;
+    }
+    inputSink(this._inputOperand);
   }
 }
