@@ -1,6 +1,7 @@
 import 'dart:async';
 
 class KeyboardBloc {
+  //Stream controllers of input and result widgets.
   final _inputStreamController = StreamController<String>.broadcast();
   final _resultStreamController = StreamController<String>.broadcast();
 
@@ -20,6 +21,8 @@ class KeyboardBloc {
 
   String _nextOperation = ""; //Next operation to be executed.
 
+  bool swippable = true;
+
   dispose() {
     _inputStreamController?.close();
     _resultStreamController?.close();
@@ -29,11 +32,7 @@ class KeyboardBloc {
     if (value == 'C')
       _eraseCalc();
     else if (value == 'DEL' || value == 'del') {
-      if (this._inputOperand.length > 0) {
-        this._inputOperand =
-            this._inputOperand.substring(0, this._inputOperand.length - 1);
-        await inputSink(this._inputOperand);
-      }
+      deleteDigit();
     } else if (_operationsList.contains(value)) {
       _preOperate(value);
     } else if (value == '=') {
@@ -97,6 +96,23 @@ class KeyboardBloc {
     } else {
       this.resultSink(_inputOperand);
       this._inputOperand = "";
+    }
+  }
+
+  void deleteDigit() {
+    if (this._inputOperand.length > 0) {
+      this._inputOperand =
+          this._inputOperand.substring(0, this._inputOperand.length - 1);
+      inputSink(this._inputOperand);
+    }
+  }
+
+  void swipeToErase() {
+    if (swippable) {
+      print('qlq');
+      this.swippable = false;
+      deleteDigit();
+      Timer(Duration(milliseconds: 500), () => (swippable = true));
     }
   }
 }

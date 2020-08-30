@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:simple_calculator/components/keyboard_layout.dart';
@@ -51,21 +53,28 @@ class InputValueBox extends StatelessWidget {
     return StreamBuilder(
       stream: Provider.of(context).inputStream,
       builder: (context, AsyncSnapshot<String> snapshot) {
-        return Container(
-          padding: EdgeInsets.only(right: kDefaultPadding),
-          width: double.infinity,
-          height: size.height * 0.10,
-          color: kPrimaryColor,
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerRight,
-            child: Text(
-              snapshot.hasData
-                  ? (snapshot.data.isNotEmpty ? snapshot.data : "")
-                  : "",
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                fontSize: 70.0,
+        return GestureDetector(
+          onPanUpdate: (details) {
+            if (details.delta.dx > 0 || details.delta.dx < 0) {
+              Provider.of(context).swipeToErase();
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.only(right: kDefaultPadding),
+            width: double.infinity,
+            height: size.height * 0.10,
+            color: kPrimaryColor,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: Text(
+                snapshot.hasData
+                    ? (snapshot.data.isNotEmpty ? snapshot.data : "")
+                    : "",
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  fontSize: 70.0,
+                ),
               ),
             ),
           ),
